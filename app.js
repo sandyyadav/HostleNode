@@ -56,7 +56,7 @@ app.post("/register", async (req, res) => {
 app.post("/login-user", async (req, res) => {
   const { rollNumber, password } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ rollNumber });
   if (!user) {
     return res.json({ error: "User Not Found" });
   }
