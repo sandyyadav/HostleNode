@@ -26,7 +26,7 @@ app.listen(5000, () => {
   console.log("Server Started");
 });
 
-require("./userDetails");
+require("./schema");
 const User = mongoose.model("UserInfo");
 
 //To Register New User
@@ -56,7 +56,7 @@ app.post("/register", async (req, res) => {
 app.post("/login-user", async (req, res) => {
   const { rollNumber, password } = req.body;
 
-  const user = await User.findOne({rollNumber});
+  const user = await User.findOne({ email });
   if (!user) {
     return res.json({ error: "User Not Found" });
   }
@@ -73,17 +73,41 @@ app.post("/login-user", async (req, res) => {
 });
 
 //
-app.post("/userData", async (req, res) => {
-  const { token } = req.body;
-  try {
-    const user = jwt.verify(token, JWT_SECRET);
-    const useremail = user.email;
-    User.findOne({ email: useremail })
-      .then((data) => {
-        res.send({ status: "OK", data: data });
-      })
-      .catch((error) => {
-        res.send({ status: "error", data: error });
-      });
-  } catch (error) {}
+// app.post("/userData", async (req, res) => {
+//   const { token } = req.body;
+//   try {
+//     const user = jwt.verify(token, JWT_SECRET);
+//     const userRollNumber = user.rollNumber;
+//     User.findOne({ rollNumber: userRollNumber })
+//       .then((data) => {
+//         res.send({ status: "OK", data: data });
+//       })
+//       .catch((error) => {
+//         res.send({ status: "error", data: error });
+//       });
+//   } catch (error) {}
+// });
+
+require("./schema");
+const Admin = mongoose.model("adminData");
+//ADMIN LOGIN AUTHENTICATION
+app.post("/admin-user", async (req, res) => {
+  const { adminId, adminPassword } = req.body;
+
+  const admin = await Admin.findOne({ adminId });
+  if (!admin) {
+    return res.json({ error: "User Not Found" });
+  }
+  if (await bcrypt.compare(adminPassword, admin.adminPassword)) {
+    if (res.status(201)) {
+      return res.json({ status: "OK" });
+    } else {
+      return res.json({ error: "error" });
+    }
+  }
+  res.json({ status: "error", error: "INVALID PASSWORD" });
 });
+
+// *************************************************
+// *************************************************
+// *********** ADMIN REGISTRATION ******************
