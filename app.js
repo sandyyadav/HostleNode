@@ -90,6 +90,32 @@ app.post("/login-user", async (req, res) => {
 
 require("./schema");
 const Admin = mongoose.model("adminData");
+
+// ********************************************
+// ********************************************
+// ************* ADMIN REGISTRATION ***********
+app.post("/admin-register", async (req, res) => {
+  const { adminId, adminPassword } = req.body;
+
+  const encryptedPassword = await bcrypt.hash(adminPassword, 10);
+  try {
+    const oldUser = await Admin.findOne({ adminId });
+
+    if (oldUser) {
+      return res.json({ error: "User Exists" });
+    }
+    await Admin.create({
+      adminId,
+      adminPassword: encryptedPassword,
+    });
+    res.send({ status: "ok" });
+  } catch (error) {
+    res.send({ status: "error" });
+  }
+});
+
+// *********************************
+// *********************************
 //ADMIN LOGIN AUTHENTICATION
 app.post("/admin-user", async (req, res) => {
   const { adminId, adminPassword } = req.body;
@@ -107,7 +133,3 @@ app.post("/admin-user", async (req, res) => {
   }
   res.json({ status: "error", error: "INVALID PASSWORD" });
 });
-
-// *************************************************
-// *************************************************
-// *********** ADMIN REGISTRATION ******************
