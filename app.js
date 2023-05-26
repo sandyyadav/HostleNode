@@ -11,7 +11,7 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = "hvme12#tyu7834?[]powqrdgty";
 
 //Below is the steps to connect to the MongoDB Database
-const mongoUrl = "mongodb://localhost:27017/hostleRegister";
+const mongoUrl = "mongodb://0.0.0.0:27017/hostleRegister";
 
 mongoose
   .connect(mongoUrl, {
@@ -54,9 +54,9 @@ app.post("/register", async (req, res) => {
 
 // To Login in the websites
 app.post("/login-user", async (req, res) => {
-  const { email, password } = req.body;
+  const { rollNumber, password } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({rollNumber});
   if (!user) {
     return res.json({ error: "User Not Found" });
   }
