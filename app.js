@@ -31,8 +31,8 @@ const User = mongoose.model("UserInfo");
 
 //To Register New User
 app.post("/register", async (req, res) => {
-  const { rollNumber, fullName, email, password } = req.body;
-
+  const { rollNumber, Name, email, password } = req.body;
+  console.log(Name);
   const encryptedPassword = await bcrypt.hash(password, 10);
   try {
     const oldUser = await User.findOne({ rollNumber });
@@ -42,7 +42,7 @@ app.post("/register", async (req, res) => {
     }
     await User.create({
       rollNumber,
-      fullName,
+      Name,
       email,
       password: encryptedPassword,
     });
@@ -71,7 +71,18 @@ app.post("/login-user", async (req, res) => {
   }
   res.json({ status: "error", error: "INVALID PASSWORD" });
 });
+//to update profile
+require("./schema");
+const pro = mongoose.model("profile");
 
+app.post("/updateform",async(req,res)=>{
+  console.log("in update api");
+  console.log(req.body);
+  const reasult = await pro.create(
+    req.body 
+  )
+  res.send({ status: "ok" })
+})
 //
 // app.post("/userData", async (req, res) => {
 //   const { token } = req.body;
