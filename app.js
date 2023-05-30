@@ -1,11 +1,11 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-app.use(express.json());
+app.use(express.json({limit:'50mb'}));
+app.use(express.urlencoded({limit:'50mb'}));
 const cors = require("cors");
 app.use(cors());
 const bcrypt = require("bcryptjs");
-
 const jwt = require("jsonwebtoken");
 
 const JWT_SECRET = "hvme12#tyu7834?[]powqrdgty";
@@ -143,4 +143,30 @@ app.post("/admin-user", async (req, res) => {
     }
   }
   res.json({ status: "error", error: "INVALID PASSWORD" });
+});
+app.get("/getprofile/:roll",async(req,res)=>{
+  const rollnum=req.params.roll;
+  const user = await pro.findOne(
+    {"$or":[
+      {"rollnumber":{$regex:rollnum}}
+    ]}
+    );
+    console.log(user);
+    if(user)
+  res.send(user);
+  else
+  res.send("not");
+});
+app.get("/getname/:roll",async(req,res)=>{
+  const rollnum=req.params.roll;
+  const profilename = await  User.findOne(
+    {"$or":[
+      {"rollNumber":{$regex:rollnum}}
+    ]}
+    );
+    console.log(profilename);
+    if(profilename)
+  res.send(profilename);
+  else
+  res.send("not");
 });
