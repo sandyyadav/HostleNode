@@ -32,7 +32,7 @@ const User = mongoose.model("UserInfo");
 //To Register New User
 app.post("/register", async (req, res) => {
   const { rollNumber, Name, email, password } = req.body;
-  console.log(Name);
+
   const encryptedPassword = await bcrypt.hash(password, 10);
   try {
     const oldUser = await User.findOne({ rollNumber });
@@ -76,8 +76,7 @@ require("./schema");
 const pro = mongoose.model("profile");
 
 app.post("/updateform",async(req,res)=>{
-  console.log("in update api");
-  console.log(req.body);
+
   const reasult = await pro.create(
     req.body 
   )
@@ -151,7 +150,7 @@ app.get("/getprofile/:roll",async(req,res)=>{
       {"rollnumber":{$regex:rollnum}}
     ]}
     );
-    console.log(user);
+    
     if(user)
   res.send(user);
   else
@@ -164,7 +163,6 @@ app.get("/getname/:roll",async(req,res)=>{
       {"rollNumber":{$regex:rollnum}}
     ]}
     );
-    console.log(profilename);
     if(profilename)
   res.send(profilename);
   else

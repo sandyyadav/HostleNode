@@ -33,6 +33,7 @@ const profileSchema = new mongoose.Schema(
     parentsMobileNumber:String,
     address:String,
     image:String,
+    DOB:String
   },
   {
     collection:"profile"
